@@ -100,6 +100,11 @@ router.get(
                   input_type: "text",
                   required: true,
                 },
+                {
+                  label: req.__("UUID IDs"),
+                  name: "uuid_ids",
+                  type: "Bool",
+                },
               ],
             }),
             req.csrfToken()

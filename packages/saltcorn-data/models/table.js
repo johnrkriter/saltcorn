@@ -49,6 +49,7 @@ class Table {
   constructor(o) {
     this.name = o.name;
     this.id = o.id;
+    this.uuid_ids = !!o.uuid_ids;
     this.min_role_read = o.min_role_read;
     this.min_role_write = o.min_role_write;
     this.versioned = !!o.versioned;
@@ -66,14 +67,20 @@ class Table {
   }
   static async create(name, options = {}) {
     const schema = db.getTenantSchemaPrefix();
+    const uuid_ids = !!options.uuid_ids;
     await db.query(
       `create table ${schema}"${sqlsanitize(name)}" (id ${
-        db.isSQLite ? "integer" : "serial"
+        db.isSQLite
+          ? "integer"
+          : uuid_ids
+          ? "uuid DEFAULT uuid_generate_v4()"
+          : "serial"
       } primary key)`
     );
     const tblrow = {
       name,
       versioned: options.versioned || false,
+      uuid_ids,
       min_role_read: options.min_role_read || 1,
       min_role_write: options.min_role_write || 1,
     };
