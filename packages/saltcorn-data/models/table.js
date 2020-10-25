@@ -378,7 +378,8 @@ class Table {
         return { error: `Required field missing: ${f.label}` };
     }
     // also id
-    if (headers.includes(`id`)) okHeaders.id = { type: "Integer" };
+    if (headers.includes(`id`))
+      okHeaders.id = { type: this.uuid_ids ? "String" : "Integer" };
     const colRe = new RegExp(`(${Object.keys(okHeaders).join("|")})`);
     var file_rows;
     try {
@@ -414,7 +415,7 @@ class Table {
 
     if (!db.isSQLite) await client.release(true);
 
-    if (db.reset_sequence) await db.reset_sequence(this.name);
+    if (db.reset_sequence && !this.uuid_ids) await db.reset_sequence(this.name);
     return {
       success:
         `Imported ${file_rows.length - rejects} rows into table ${this.name}` +
@@ -450,7 +451,7 @@ class Table {
     }
     await client.query("COMMIT");
     if (!db.isSQLite) await client.release(true);
-    if (db.reset_sequence) await db.reset_sequence(this.name);
+    if (db.reset_sequence && !this.uuid_ids) await db.reset_sequence(this.name);
 
     return {
       success: `Imported ${file_rows.length} rows into table ${this.name}`,
