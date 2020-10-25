@@ -131,7 +131,7 @@ module.exports = async () => {
     min_role: 8,
     on_root_page: true,
   });
-  const readings = await Table.create("readings");
+  const readings = await Table.create("readings", { uuid_ids: true });
   await Field.create({
     table: readings,
     name: "temperature",

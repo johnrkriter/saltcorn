@@ -24,6 +24,7 @@ const table_pack = contract(pack_fun, async (name) => {
     min_role_read: table.min_role_read,
     min_role_write: table.min_role_write,
     versioned: table.versioned,
+    uuid_ids: table.uuid_ids,
     fields: fields.map((f) => strip_ids(f.toJson)),
   };
 });
